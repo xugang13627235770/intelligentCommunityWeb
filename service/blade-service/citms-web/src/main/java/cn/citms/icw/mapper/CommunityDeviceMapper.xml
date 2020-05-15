@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.citms.icw.mapper.CommunityDeviceMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="communityDeviceResultMap" type="cn.citms.icw.entity.CommunityDevice">
+        <id column="deviceId" property="deviceId"/>
+        <result column="communityId" property="communityId"/>
+        <result column="buildId" property="buildId"/>
+        <result column="unitId" property="unitId"/>
+        <result column="communityShow" property="communityShow"/>
+    </resultMap>
+    <update id="batchInsert">
+        INSERT INTO sq_community_device (deviceId,communityId,buildId,unitId)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.deviceId},#{item.communityId},#{item.buildId},#{item.unitId})
+        </foreach>
+    </update>
+
+
+    <select id="selectCommunityDevicePage" resultMap="communityDeviceResultMap">
+        select * from sq_community_device b where 1=1
+        <if test="vo.unitId != null and vo.unitId != ''">
+            AND b.unitId = #{vo.unitId}
+        </if>
+        <if test="(vo.unitId == null or vo.unitId == '') and (vo.communityId != null and vo.communityId != '')">
+            AND b.communityId = #{vo.communityId}
+        </if>
+        <if test="vo.communityIds != null and vo.communityIds.size > 0">
+            AND b.communityId IN
+            <foreach collection="vo.communityIds" item="communityId" index="index" open="(" close=")" separator=",">
+                #{communityId}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="getInfoByCommunityId" resultMap="communityDeviceResultMap">
+        select * from sq_community_device b where b.communityId = #{id}
+    </select>
+
+    <select id="getByCommunityIdList" resultMap="communityDeviceResultMap">
+        select * from sq_community_device b
+        <where>
+            <if test="ids !=null and ids.size()>0">
+                   and b.communityId in
+                    <foreach collection="ids" item="communityId" index="index" open="(" close=")" separator=",">
+                        #{communityId}
+                    </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByDeviceId" resultMap="communityDeviceResultMap">
+        SELECT * FROM sq_community_device WHERE deviceId=#{id}
+    </select>
+
+    <select id="selectCommunityByIdIn" resultMap="communityDeviceResultMap">
+        SELECT * FROM sq_community_device WHERE 1=1
+        <if test="ids != null">
+            AND deviceId IN
+            <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="selectAll" resultMap="communityDeviceResultMap">
+         SELECT * FROM sq_community_device
+    </select>
+
+</mapper>

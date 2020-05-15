@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.springblade</groupId>
+    <artifactId>BladeX-Biz</artifactId>
+    <version>2.2.1.RELEASE</version>
+    <packaging>pom</packaging>
+
+    <properties>
+        <bladex.project.version>2.2.1.RELEASE</bladex.project.version>
+
+        <java.version>1.8</java.version>
+
+        <flowable.version>6.4.2</flowable.version>
+        <dubbo.version>2.7.3</dubbo.version>
+
+        <spring.boot.version>2.1.9.RELEASE</spring.boot.version>
+        <spring.cloud.version>Greenwich.SR3</spring.cloud.version>
+        <spring.platform.version>Cairo-SR8</spring.platform.version>
+        <poi.version>4.1.1</poi.version>
+        <commons.collections.version>4.4</commons.collections.version>
+        <commons.lang.version>3.9</commons.lang.version>
+        <xxl-job.version>2.1.0</xxl-job.version>
+        <hutool.version>3.3.2</hutool.version>
+        <bboss-elasticsearch.version>5.7.5</bboss-elasticsearch.version>
+        <bboss-elasticsearch-rest-jdbc.version>6.0.1</bboss-elasticsearch-rest-jdbc.version>
+        <citms-dataaccess.version>2.2.0.RELEASE</citms-dataaccess.version>
+
+        <!-- 推荐使用Harbor -->
+        <docker.registry.url>192.168.0.157</docker.registry.url>
+        <docker.registry.host>http://${docker.registry.url}:2375</docker.registry.host>
+        <docker.plugin.version>1.1.0</docker.plugin.version>
+    </properties>
+
+    <modules>
+        <module>blade-common</module>
+        <module>blade-service</module>
+        <module>blade-service-api</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring.cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.spring.platform</groupId>
+                <artifactId>platform-bom</artifactId>
+                <version>${spring.platform.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springblade.platform</groupId>
+                <artifactId>blade-bom</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springblade</groupId>
+                <artifactId>blade-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+
+
+    </dependencies>
+
+    <build>
+        <finalName>${project.name}</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+        </resources>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring.boot.version}</version>
+                    <configuration>
+                        <fork>true</fork>
+                        <finalName>${project.build.finalName}</finalName>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>repackage</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>UTF-8</encoding>
+                    <compilerArgs>
+                        <arg>-parameters</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <!--<repositories>-->
+        <!--<repository>-->
+            <!--<id>blade-release</id>-->
+            <!--<name>Release Repository</name>-->
+            <!--<url>http://nexus.bladex.vip/repository/maven-releases/</url>-->
+        <!--</repository>-->
+        <!--<repository>-->
+            <!--<id>aliyun-repos</id>-->
+            <!--<url>http://maven.aliyun.com/nexus/content/groups/public/</url>-->
+            <!--<snapshots>-->
+                <!--<enabled>false</enabled>-->
+            <!--</snapshots>-->
+        <!--</repository>-->
+    <!--</repositories>-->
+
+    <!--<pluginRepositories>-->
+        <!--<pluginRepository>-->
+            <!--<id>aliyun-plugin</id>-->
+            <!--<url>http://maven.aliyun.com/nexus/content/groups/public/</url>-->
+            <!--<snapshots>-->
+                <!--<enabled>false</enabled>-->
+            <!--</snapshots>-->
+        <!--</pluginRepository>-->
+    <!--</pluginRepositories>-->
+
+    <repositories>
+        <repository>
+            <id>nexus</id>
+            <url>http://192.168.0.41:8081/repository/maven-public/</url>
+            <releases />
+            <snapshots />
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>nexus</id>
+            <url>http://192.168.0.41:8081/repository/maven-public/</url>
+            <releases />
+            <snapshots />
+        </pluginRepository>
+    </pluginRepositories>
+
+</project>

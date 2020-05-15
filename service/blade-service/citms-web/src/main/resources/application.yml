@@ -1,0 +1,19 @@
+#mybatis-plus配置
+mybatis-plus:
+  mapper-locations: classpath:cn/citms/**/mapper/*Mapper.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: cn.citms.**.entity
+
+#swagger扫描路径配置
+swagger:
+  base-packages:
+    - cn.citms.icw
+  title: 智慧社区接口文档
+  description: 智慧社区接口文档
+  terms-of-service-url: /icw
+  contact:
+    name: 中科通达
+
+# 配置日志地址
+logging:
+  config: classpath:logback/logback-${blade.env}.xml

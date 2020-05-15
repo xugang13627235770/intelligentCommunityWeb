@@ -1,0 +1,88 @@
+<properties>
+
+    <property name="getPersonFlowCountGroupByTimeArea">
+        <![CDATA[
+            {
+              "size": 0,
+              "query": {
+                 #set( $hasParam = false )
+                "bool": {
+                  "must": [
+                    #if($esxts && $esxts.size()> 0)
+                     #set( $hasParam = true )
+                    {
+                      "terms": {
+                        "ext": #[esxts,serialJson=true]
+                      }
+                    }
+                    #end
+                    #if($startTime && !$startTime.equals("")  && $endTime && !$endTime.equals(""))
+                    #if($hasParam),#end
+                    {
+                      "range": {
+                        "statDate": {
+                          "gte":  #[startTime],
+                          "lte":  #[endTime]
+                        }
+                      }
+                    }
+                   #end
+                  ]
+                }
+              },
+              "aggs": {
+                "groupDate": {
+                  "date_histogram": {
+                    "field": "statDate",
+                    "interval": #[interval],
+                    "format": #[format]
+                  },
+                  "aggs": {
+                       "sum_flowPersonCount": {
+                            "sum": {
+                                "field": "flowPersonCount"
+                            }
+                        }
+                    }
+                }
+              },
+             "sort": [ {
+                            "statDate": {
+                                "order": "asc"
+                            }
+                        }
+                ]
+            }
+        ]]>
+    </property>
+    <property name="queryPersonTrafficflowStatisticsByCount">
+        <![CDATA[{
+    "size": 0,
+    "aggs": {
+        "sum_flowPersonCount": {
+            "sum": {
+                "field": "flowPersonCount"
+            }
+        },
+        "sum_yzCount": {
+            "sum": {
+                "field": "yzCount"
+            }
+        },
+        "sum_zhCount": {
+            "sum": {
+                "field": "zhCount"
+            }
+        },
+        "sum_lfCount": {
+            "sum": {
+                "field": "lfCount"
+            }
+        }
+    }
+}]]>
+
+    </property>
+
+
+</properties>

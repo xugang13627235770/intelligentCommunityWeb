@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.citms.icw.mapper.OnestandardthreefactsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="onestandardthreefactsResultMap" type="cn.citms.icw.entity.Onestandardthreefacts">
+        <id column="id" property="id"/>
+        <result column="zylbdm" property="zylbdm"/>
+        <result column="jgssxdm" property="jgssxdm"/>
+        <result column="zzcsdm" property="zzcsdm"/>
+        <result column="mph" property="mph"/>
+        <result column="xbdm" property="xbdm"/>
+        <result column="zzsy" property="zzsy"/>
+        <result column="hjdz_dzmc" property="hjdzDzmc"/>
+        <result column="whcddm" property="whcddm"/>
+        <result column="xm" property="xm"/>
+        <result column="mzdm" property="mzdm"/>
+        <result column="yhbs" property="yhbs"/>
+        <result column="sfzhm" property="sfzhm"/>
+        <result column="ywlx" property="ywlx"/>
+        <result column="sszrqdm" property="sszrqdm"/>
+        <result column="fwcs" property="fwcs"/>
+        <result column="bzdzdm" property="bzdzdm"/>
+        <result column="hyzkdm" property="hyzkdm"/>
+        <result column="xzjddm" property="xzjddm"/>
+        <result column="lxdh" property="lxdh"/>
+        <result column="hjd_xzqhdm" property="hjdXzqhdm"/>
+        <result column="csrq" property="csrq"/>
+        <result column="djrq" property="djrq"/>
+        <result column="zx_rqsj" property="zxRqsj"/>
+        <result column="dqjd" property="dqjd"/>
+        <result column="dqwd" property="dqwd"/>
+    </resultMap>
+
+
+    <select id="selectOnestandardthreefactsPage" resultMap="onestandardthreefactsResultMap">
+        select * from sq_onestandardthreefacts where is_deleted = 0
+    </select>
+
+</mapper>

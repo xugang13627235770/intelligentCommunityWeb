@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.citms.icw.mapper.HouseMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="houseResultMap" type="cn.citms.icw.entity.House">
+        <id column="id" property="id"/>
+        <result column="fw_bh" property="fw_Bh"/>
+        <result column="fw_dm" property="fw_Dm"/>
+        <result column="fw_bs" property="fw_Bs"/>
+        <result column="fw_zt" property="fw_Zt"/>
+        <result column="fw_lx" property="fw_Lx"/>
+        <result column="fangwu_dzmc" property="fangWu_Dzmc"/>
+        <result column="jzmj_mjpfm" property="jzmj_Mjpfm"/>
+        <result column="sz_lch" property="sz_Lch"/>
+        <result column="fwyt_jyqk" property="fwyt_Jyqk"/>
+        <result column="jzry_sl" property="jzry_Sl"/>
+        <result column="wtdlr_xm" property="wtdlr_Xm"/>
+        <result column="wtdlr_zjlxmc" property="wtdlr_Zjlxmc"/>
+        <result column="wtdlr_zjhm" property="wtdlr_Zjhm"/>
+        <result column="wtdlr_lxdh" property="wtdlr_Lxdh"/>
+        <result column="syq_lx" property="syq_Lx"/>
+        <result column="zdfw_pdbs" property="zdfw_Pdbs"/>
+        <result column="zl_zt" property="zl_Zt"/>
+        <result column="jzzz_pdbs" property="jzzz_Pdbs"/>
+        <result column="rz_rqsj" property="rz_Rqsj"/>
+        <result column="gq_rqsj" property="gq_Rqsj"/>
+        <result column="unit_id" property="unit_Id"/>
+        <result column="building_id" property="building_Id"/>
+        <result column="community_id" property="community_Id"/>
+        <result column="fjId" property="fjId"/>
+    </resultMap>
+    <update id="batchInsert">
+        INSERT INTO sq_house (id,community_id,building_id,unit_id,fw_bh,syq_lx,fw_zt,fw_lx,fjId,sz_lch,rz_rqsj,gq_rqsj,jzmj_mjpfm,fangwu_dzmc,wtdlr_xm,wtdlr_zjlxmc,wtdlr_zjhm,wtdlr_lxdh)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id},#{item.community_Id},#{item.building_Id},#{item.unit_Id},#{item.fw_Bh},#{item.syq_Lx},#{item.fw_Zt},#{item.fw_Lx},#{item.fjId},#{item.sz_Lch},
+            #{item.rz_Rqsj},#{item.gq_Rqsj},#{item.jzmj_Mjpfm},#{item.fangWu_Dzmc},#{item.wtdlr_Xm},#{item.wtdlr_Zjlxmc},#{item.wtdlr_Zjhm},#{item.wtdlr_Lxdh})
+        </foreach>
+    </update>
+
+    <select id="selectManageQuery" resultMap="houseResultMap">
+        SELECT b.id,b.fw_bh as fw_Bh,b.fw_dm as fw_Dm,b.fw_bs as fw_Bs,b.fw_zt as fw_Zt,b.fw_lx as fw_Lx,
+        b.fangwu_dzmc as fangWu_Dzmc,b.jzmj_mjpfm as jzmj_Mjpfm,b.sz_lch as sz_Lch,b.fwyt_jyqk as fwyt_Jyqk,
+        b.jzry_sl as jzry_Sl,b.wtdlr_xm as wtdlr_Xm,b.wtdlr_zjlxmc as wtdlr_Zjlxmc,b.wtdlr_zjhm as wtdlr_Zjhm,
+        b.wtdlr_lxdh as wtdlr_Lxdh,b.syq_lx as syq_Lx,b.zdfw_pdbs as zdfw_Pdbs,b.zl_zt as zl_Zt,
+        b.jzzz_pdbs as jzzz_Pdbs,b.rz_rqsj as rz_Rqsj,b.gq_rqsj as gq_Rqsj,b.unit_id as unit_Id,
+        b.building_id as building_Id,b.community_id as community_Id,b.fjId
+         FROM sq_house b WHERE 1=1
+        <if test="vo.community_Id != null and vo.community_Id != ''">
+            AND b.community_id = #{vo.community_Id}
+        </if>
+        <if test="vo.communityIds != null and vo.communityIds.size > 0">
+            AND b.community_id in
+            <foreach collection="vo.communityIds" item="community_id" index="index" open="(" close=")" separator=",">
+                #{community_id}
+            </foreach>
+        </if>
+        <if test="vo.building_Id != null and vo.building_Id != ''"> and b.building_id = #{vo.building_Id}</if>
+        <if test="vo.unit_Id != null and vo.unit_Id != ''"> and b.unit_id = #{vo.unit_Id}</if>
+        <if test="vo.house_Id != null and vo.house_Id != ''"> and b.fw_bh = #{vo.house_Id}</if>
+        <if test="vo.sz_Lch != null and vo.sz_Lch != ''"> and b.sz_lch = #{vo.sz_Lch}</if>
+        <if test="vo.fw_Lx != null and vo.fw_Lx != ''"> and b.fw_lx = #{vo.fw_Lx}</if>
+        <if test="vo.fw_Zt != null and vo.fw_Zt != ''"> and b.fw_zt = #{vo.fw_Zt}</if>
+    </select>
+
+    <select id="selectAll" resultMap="houseResultMap">
+        SELECT * FROM sq_house b
+    </select>
+
+    <select id="selectHouseById" resultMap="houseResultMap">
+        SELECT b.id,b.fw_bh as fw_Bh,b.fw_dm as fw_Dm,b.fw_bs as fw_Bs,b.fw_zt as fw_Zt,b.fw_lx as fw_Lx,
+        b.fangwu_dzmc as fangWu_Dzmc,b.jzmj_mjpfm as jzmj_Mjpfm,b.sz_lch as sz_Lch,b.fwyt_jyqk as fwyt_Jyqk,
+        b.jzry_sl as jzry_Sl,b.wtdlr_xm as wtdlr_Xm,b.wtdlr_zjlxmc as wtdlr_Zjlxmc,b.wtdlr_zjhm as wtdlr_Zjhm,
+        b.wtdlr_lxdh as wtdlr_Lxdh,b.syq_lx as syq_Lx,b.zdfw_pdbs as zdfw_Pdbs,b.zl_zt as zl_Zt,
+        b.jzzz_pdbs as jzzz_Pdbs,b.rz_rqsj as rz_Rqsj,b.gq_rqsj as gq_Rqsj,b.unit_id as unit_Id,
+        b.building_id as building_Id,b.community_id as community_Id,b.fjId
+         FROM sq_house b WHERE b.id=#{id}
+    </select>
+
+    <select id="selectCountBandingHouseId" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM sq_house WHERE building_id=#{id}
+    </select>
+
+    <select id="countHouse" resultType="java.lang.Double">
+        SELECT COUNT(*) FROM sq_house WHERE 1=1
+        <if test="communityId != null and communityId != ''">
+            and community_id = #{communityId}
+        </if>
+    </select>
+
+    <select id="getHouseZtCnt" resultType="cn.citms.icw.vo.SelectCntVO">
+        SELECT fw_zt as name,COUNT(*) as `value` FROM sq_house WHERE community_id IN
+        <foreach collection="communityIds" item="communityId" index="index" open="(" close=")" separator=",">
+            #{communityId}
+        </foreach>
+        <![CDATA[ AND fw_zt <> '']]>
+        GROUP BY fw_zt
+    </select>
+    <select id="getHouseCnt" resultType="java.lang.Integer">
+        SELECT COUNT(*) as `value` FROM sq_house WHERE community_id IN
+        <foreach collection="communityIds" item="communityId" index="index" open="(" close=")" separator=",">
+            #{communityId}
+        </foreach>
+    </select>
+
+    <select id="countGroupByHouseFunction" parameterType="string" resultType="cn.citms.icw.dto.CommonCountDTO">
+        select fw_zt keyName,count(*) count from  sq_house where fw_zt is not null
+        <if test="ids !=null and ids.size()>0">
+            and community_id in
+            <foreach collection="ids" open="(" close=")" separator="," item="item">
+                #{item}
+            </foreach>
+        </if>
+        group by fw_zt
+    </select>
+    <select id="selectByCommunityIds" resultMap="houseResultMap">
+        SELECT * FROM sq_house WHERE community_id IN
+        <foreach collection="ids" item="communityId" index="index" open="(" close=")" separator=",">
+            #{communityId}
+        </foreach>
+    </select>
+</mapper>

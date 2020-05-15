@@ -1,0 +1,133 @@
+<properties>
+
+    <property name="getTimeAreaPartollogCount">
+        <![CDATA[
+            {
+              "size": 0,
+              "query": {
+                 #set( $hasParam = false )
+                "bool": {
+                  "must": [
+                    #if($esxts && $esxts.size()> 0)
+                     #set( $hasParam = true )
+                    {
+                      "terms": {
+                        "ext": #[esxts,serialJson=true]
+                      }
+                    }
+                    #end
+                    #if($startTime && !$startTime.equals("")  && $endTime && !$endTime.equals(""))
+                    #if($hasParam),#end
+                    {
+                      "range": {
+                        "captureTime": {
+                          "gte":  #[startTime],
+                          "lte":  #[endTime]
+                        }
+                      }
+                    }
+                   #end
+                  ]
+                }
+              }
+            }
+        ]]>
+    </property>
+
+    <property name="getPartollogInfo">
+        <![CDATA[
+           {
+            "query": {
+                "bool": {
+                    "must": [
+                    #set( $needComma = false )
+                    #if($pointNumbers && $pointNumbers.size()> 0)
+                     {
+                            "terms": {
+                                "pointNumber": #[pointNumbers,serialJson=true]
+                            }
+                        }
+                     #set( $needComma = true )
+                     #end
+
+                    #if($ext && !$ext.equals(""))
+                     #if($needComma),#else #set( $needComma = true ) #end
+                        {
+                            "term": {
+                                "ext": #[ext]
+                            }
+                        }
+                    #end
+
+                    #if($staffName && !$staffName.equals(""))
+                     #if($needComma),#else #set( $needComma = true ) #end
+                        {
+                            "term": {
+                                "staffName": #[staffName]
+                            }
+                        }
+                    #end
+
+                     #if($exts && $exts.size()> 0)
+                     #if($needComma),#else #set( $needComma = true ) #end
+                        {
+                            "terms": {
+                                "ext": #[exts,serialJson=true]
+                            }
+                        }
+                    #end
+                    ]
+                    ,
+                    "filter": [
+                        #if($startTime && !$startTime.equals("")&& $endTime && !$endTime.equals(""))
+                        {
+                            "range":
+                            {
+                                "captureTime": {
+                                    "gte": #[startTime],
+                                    "lte": #[endTime]
+                                }
+                            }
+                        }
+                        #end
+                    ]
+
+                }
+            },
+             "from": #[pageindex],
+                           "size": #[pagesize],
+            "sort": [{
+                                    "captureTime": {
+                                        "order": "desc"
+                                    }
+                                },{
+                                    "_score": {
+                                        "order": "desc"
+                                    }
+                                }]
+        }
+        ]]>
+    </property>
+
+    <property name="getPatrollogById">
+        <![CDATA[
+           {
+            "query": {
+                "bool": {
+                    "must": [
+                         #if($uuid && !$uuid.equals(""))
+                        {
+                            "term": {
+                                "uuid": #[uuid]
+                            }
+                        }
+                    #end
+                    ]
+
+                }
+            }
+        }
+        ]]>
+    </property>
+
+</properties>

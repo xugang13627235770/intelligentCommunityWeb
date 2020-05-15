@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.citms.icw.mapper.UnitMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="unitResultMap" type="cn.citms.icw.entity.Unit">
+        <id column="id" property="id"/>
+        <result column="dy_bm" property="dy_Bm"/>
+        <result column="dy_mc" property="dy_Mc"/>
+        <result column="dy_bs" property="dy_Bs"/>
+        <result column="mclh_sl" property="mclh_Sl"/>
+        <result column="building_id" property="building_Id"/>
+        <result column="community_id" property="community_Id"/>
+    </resultMap>
+
+    <resultMap id="unitVoResultMap" type="cn.citms.icw.vo.UnitVO" extends="unitResultMap">
+        <result column="xqmc" property="sqmc"/>
+        <result column="ldh_mc" property="ldmc"/>
+    </resultMap>
+    <update id="batchInsert">
+        INSERT INTO sq_unit (id,community_id,building_id,dy_mc,dy_bs,mclh_sl)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id},#{item.community_Id},#{item.building_Id},#{item.dy_Mc},#{item.dy_Bs},#{item.mclh_Sl})
+        </foreach>
+    </update>
+
+
+    <select id="selectUnitPage" resultMap="unitVoResultMap">
+        select t1.*, t2.xqmc, t3.ldh_mc from sq_unit t1
+        LEFT JOIN sq_community t2 on t1.community_id=t2.id
+        LEFT JOIN sq_building t3 on t1.building_id=t3.id
+        <where>
+            <if test="vo.dy_Mc != null and vo.dy_Mc != ''">
+                and t1.dy_mc like concat('%', #{vo.dy_Mc}, '%')
+            </if>
+            <if test="vo.sqmc != null and vo.sqmc != ''">
+                and t2.xqmc like concat('%', #{vo.sqmc}, '%')
+            </if>
+            <if test="vo.community_Id != null and vo.community_Id != ''">
+                and t1.community_id = #{vo.community_Id}
+            </if>
+            <if test="vo.ldmc != null and vo.ldmc != ''">
+                and t3.ldh_mc like concat('%', #{vo.ldmc}, '%')
+            </if>
+            <if test="vo.building_Id != null and vo.building_Id != ''">
+                and t1.building_id = #{vo.building_Id}
+            </if>
+        </where>
+    </select>
+
+    <select id="findUnit" resultMap="unitVoResultMap">
+        select t1.*, t2.xqmc, t3.ldh_mc from sq_unit t1
+        LEFT JOIN sq_community t2 on t1.community_id=t2.id
+        LEFT JOIN sq_building t3 on t1.building_id=t3.id
+        <where>
+            <if test="id != null and id != ''">
+                and t1.id = #{id}
+            </if>
+            <if test="community_Id != null and community_Id != ''">
+                and t1.community_id = #{community_Id}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectUnitByIdIn" resultMap="unitResultMap">
+        SELECT * FROM sq_unit b WHERE 1=1
+        <if test="ids != null and ids.size>0">
+            and b.id IN
+            <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="selectCountBandingUnitId" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM sq_unit WHERE building_id=#{id}
+    </select>
+    <select id="selectByCommunityIds" resultMap="unitResultMap">
+        SELECT * FROM sq_unit WHERE community_id IN
+        <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+</mapper>

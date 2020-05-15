@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.citms.icw.mapper.BuildingMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="buildingResultMap" type="cn.citms.icw.entity.Building">
+        <id column="id" property="id"/>
+        <result column="jzdm_id" property="jzdm_Id"/>
+        <result column="jz_bm" property="jz_Bm"/>
+        <result column="jzwmc" property="jzwmc"/>
+        <result column="mh_sl" property="mh_Sl"/>
+        <result column="ldh_mc" property="ldh_Mc"/>
+        <result column="ld_bs" property="ld_Bs"/>
+        <result column="jz_xz" property="jz_Xz"/>
+        <result column="xj_rqsj" property="xj_Rqsj"/>
+        <result column="zzdy_sl" property="zzdy_Sl"/>
+        <result column="dm_cs" property="dm_Cs"/>
+        <result column="dx_cs" property="dx_Cs"/>
+        <result column="mjpfm" property="mjpfm"/>
+        <result column="px_bh" property="px_Bh"/>
+        <result column="smrzss_yxq" property="smrzss_Yxq"/>
+        <result column="dxcjz_cs" property="dxcjz_Cs"/>
+        <result column="cjsj" property="cjsj"/>
+        <result column="gxsj" property="gxsj"/>
+        <result column="jdwd_xxqk" property="jdwd_Xxqk"/>
+        <result column="community_id" property="community_Id"/>
+        <result column="dqjd" property="dqjd"/>
+        <result column="dqwd" property="dqwd"/>
+    </resultMap>
+
+    <update id="batchInsert">
+        INSERT INTO sq_building (id,community_id,ldh_mc,cjsj,dqjd,dqwd,mjpfm,jz_bm,jz_xz,dm_cs,dx_cs,dxcjz_cs)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id},#{item.community_Id},#{item.ldh_Mc},#{item.cjsj},#{item.dqjd},#{item.dqwd},#{item.mjpfm},#{item.jz_Bm},#{item.jz_Xz},#{item.dm_Cs},#{item.dx_Cs},#{item.dxcjz_Cs})
+        </foreach>
+    </update>
+
+    <select id="selectBuildingPage" parameterType="cn.citms.icw.vo.BuildingVO" resultMap="buildingResultMap">
+        SELECT b.id,b.jzdm_id as jzdm_Id, b.jz_bm as jz_Bm,b.jzwmc,b.mh_sl as mh_Sl, b.ldh_mc as ldh_Mc,b.ld_bs as ld_Bs,
+        b.jz_xz as jz_Xz,b.xj_rqsj as xj_Rqsj,b.zzdy_sl as zzdy_Sl,b.dm_cs as dm_Cs, b.dx_cs as dx_Cs,b.mjpfm,
+        b.px_bh as px_Bh,b.smrzss_yxq as smrzss_Yxq,b.dxcjz_cs as dxcjz_Cs, b.cjsj,b.gxsj,b.jdwd_xxqk as jdwd_Xxqk,
+        b.community_id as community_Id, b.dqjd,b.dqwd
+        FROM sq_building b
+        where 1=1
+        <if test="building.community_Id != null and building.community_Id != ''">
+            and b.community_id = #{building.community_Id}
+        </if>
+        <if test="building.communityIds != null and building.communityIds.size>0">
+            and b.community_id in
+            <foreach collection="building.communityIds" item="community_id" index="index" open="(" close=")" separator=",">
+                #{community_id}
+            </foreach>
+        </if>
+        <if test="building.ldh_Mc != null and building.ldh_Mc != ''">
+            <bind name="ldh_Mc" value="'%' + building.ldh_Mc + '%'" /> and b.ldh_mc LIKE #{ldh_Mc}
+        </if>
+        <if test="building.jz_Xz != null and building.jz_Xz != ''"> and b.jz_xz = #{building.jz_Xz}</if>
+        <if test="building.jz_Bm != null and building.jz_Bm != ''"> and b.jz_bm = #{building.jz_Bm}</if>
+        <if test="building.ld_Bs != null and building.ld_Bs != ''"> and b.ld_bs = #{building.ld_Bs}</if>
+        <if test="building.startTime != null and building.endTime != null">
+             and cjsj between #{building.startTime,jdbcType=TIMESTAMP} and #{building.endTime,jdbcType=TIMESTAMP}
+        </if>
+    </select>
+
+    <select id="selectBuildingById" parameterType="string" resultMap="buildingResultMap">
+        SELECT
+        id,jzdm_id as jzdm_Id, jz_bm as jz_Bm,jzwmc,mh_sl as mh_Sl, ldh_mc as ldh_Mc,ld_bs as ld_Bs,
+        jz_xz as jz_Xz,xj_rqsj as xj_Rqsj,zzdy_sl as zzdy_Sl,dm_cs as dm_Cs, dx_cs as dx_Cs,mjpfm,
+        px_bh as px_Bh,smrzss_yxq as smrzss_Yxq,dxcjz_cs as dxcjz_Cs, cjsj,gxsj,jdwd_xxqk as jdwd_Xxqk,
+        community_id as community_Id, dqjd,dqwd
+         FROM sq_building WHERE id=#{id}
+    </select>
+
+    <select id="getByCommunityId" resultMap="buildingResultMap">
+         select * from sq_building where community_id = #{id}
+    </select>
+
+    <select id="selectAll" resultMap="buildingResultMap">
+        SELECT b.id,b.jzdm_id as jzdm_Id, b.jz_bm as jz_Bm,b.jzwmc,b.mh_sl as mh_Sl, b.ldh_mc as ldh_Mc,b.ld_bs as ld_Bs,
+        b.jz_xz as jz_Xz,b.xj_rqsj as xj_Rqsj,b.zzdy_sl as zzdy_Sl,b.dm_cs as dm_Cs, b.dx_cs as dx_Cs,b.mjpfm,
+        b.px_bh as px_Bh,b.smrzss_yxq as smrzss_Yxq,b.dxcjz_cs as dxcjz_Cs, b.cjsj,b.gxsj,b.jdwd_xxqk as jdwd_Xxqk,
+        b.community_id as community_Id, b.dqjd,b.dqwd
+        FROM sq_building b
+    </select>
+
+    <select id="selectCountBandingCommunityId" parameterType="string" resultType="integer">
+        SELECT COUNT(*) FROM sq_building WHERE community_id=#{id}
+    </select>
+
+    <select id="selectBuildingByIdIn" resultMap="buildingResultMap">
+        SELECT * FROM sq_building b WHERE 1=1
+        <if test="ids != null and ids.size>0">
+            and b.id IN
+            <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="selectVillageInfo" resultType="cn.citms.icw.vo.VillageVO">
+        SELECT c.id,c.xqmc AS `name`,c.dqjd AS longitude,c.dqwd AS latitude,
+        (SELECT count(*) FROM sq_building b  WHERE b.community_id = c.id) AS buildingCount,
+        (SELECT count(*) FROM sq_unit u WHERE u.community_id = c.id ) AS unitCount,
+        (SELECT count(*) FROM sq_house h WHERE h.community_id = c.id) AS houseCount,
+        (SELECT count(*) FROM sq_personcheckin p WHERE p.community_id = c.id) AS personCount,
+        (SELECT count(*) FROM sq_vehicle v WHERE v.communityId = c.id) AS vehicleCount
+        FROM sq_community c
+        <where>
+            <if test="ids != null and ids.size>0">
+                AND c.ssxq IN
+                <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="selectCommunityDetail" resultType="cn.citms.icw.vo.VillageCommunityDetailVO">
+        SELECT c.id,c.xqmc AS `name`,b.id AS buildingId,b.ldh_mc AS buildingName,u.id AS unitId,
+            u.dy_mc AS unitName,h.id AS houseId,h.fw_bh AS houseName,p.id AS personId
+        FROM sq_community c
+        INNER JOIN sq_building b ON c.id=b.community_id
+        INNER JOIN sq_unit u ON b.id=u.building_id
+        INNER JOIN sq_house h ON u.id=h.unit_id
+        INNER JOIN sq_personcheckin p ON h.id=p.house_id
+        WHERE c.id=#{communityId}
+    </select>
+    <select id="selectByCommunityIds" resultMap="buildingResultMap">
+        select * from sq_building where community_id in
+        <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+</mapper>

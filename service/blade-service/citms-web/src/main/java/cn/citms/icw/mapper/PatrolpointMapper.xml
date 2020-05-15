@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.citms.icw.mapper.PatrolpointMapper">
+
+    <resultMap id="patrolpointResultMap" type="cn.citms.icw.entity.Patrolpoint">
+        <id column="id" property="id"/>
+        <result column="communityId" property="communityId"/>
+        <result column="deviceNo" property="deviceNo"/>
+        <result column="pointNumber" property="pointNumber"/>
+        <result column="pointName" property="pointName"/>
+        <result column="dqjd" property="dqjd"/>
+        <result column="dqwd" property="dqwd"/>
+    </resultMap>
+    <update id="batchInsert">
+        INSERT INTO sq_patrolpoint (id,communityId,pointNumber,pointName,dqjd,dqwd)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id},#{item.communityId},#{item.pointNumber},#{item.pointName},#{item.dqjd},#{item.dqwd})
+        </foreach>
+    </update>
+
+    <!-- 通用查询映射结果 -->
+    <select id="selectPatrolpointPage" resultType="cn.citms.icw.vo.PatrolpointVO">
+        select t1.*, t2.xqmc as sqmc from sq_patrolpoint t1
+        LEFT JOIN sq_community t2 on t1.communityId=t2.id
+        <where>
+            <if test="vo.sqmc != null and vo.sqmc != ''">
+                t2.xqmc like concat('%', #{vo.sqmc}, '%')
+            </if>
+            <if test="vo.pointName != null and vo.pointName != ''">
+                and t1.pointName like concat('%', #{vo.pointName}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getCountByCommunityIds" parameterType="string" resultType="int">
+        	select count(*) from sq_patrolpoint
+            <where>
+                <if test="ids !=null and ids.size()>0">
+                    and communityId in
+                    <foreach collection="ids" open="(" close=")" separator="," item="item">
+                        #{item}
+                    </foreach>
+                </if>
+            </where>
+    </select>
+    <select id="selectByCommunityIds" resultMap="patrolpointResultMap">
+        select * from sq_patrolpoint where communityId in
+        <foreach collection="ids" open="(" close=")" separator="," item="item">
+            #{item}
+        </foreach>
+    </select>
+
+</mapper>

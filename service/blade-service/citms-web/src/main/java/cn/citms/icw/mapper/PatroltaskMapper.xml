@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.citms.icw.mapper.PatroltaskMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="patroltaskResultMap" type="cn.citms.icw.entity.Patroltask">
+        <id column="id" property="id"/>
+        <result column="communityId" property="communityId"/>
+        <result column="name" property="name"/>
+        <result column="phone" property="phone"/>
+        <result column="idCard" property="idCard"/>
+        <result column="deviceNo" property="deviceNo"/>
+    </resultMap>
+
+
+    <select id="selectPatroltaskPage" resultType="cn.citms.icw.vo.PatroltaskVO">
+        select t1.*, t2.xqmc as sqmc from sq_patroltask t1
+        LEFT JOIN sq_community t2 on t1.communityId=t2.id
+        <if test="vo.sqmc != null and vo.sqmc != ''">
+            where t2.xqmc like concat('%', #{vo.sqmc}, '%')
+        </if>
+    </select>
+
+</mapper>

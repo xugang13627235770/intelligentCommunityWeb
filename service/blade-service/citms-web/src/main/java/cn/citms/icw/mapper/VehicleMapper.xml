@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.citms.icw.mapper.VehicleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="vehicleResultMap" type="cn.citms.icw.entity.Vehicle">
+        <id column="vehicleId" property="vehicleId"/>
+        <result column="communityId" property="communityId"/>
+        <result column="plateNo" property="plateNo"/>
+        <result column="plateColor" property="plateColor"/>
+        <result column="plateType" property="plateType"/>
+        <result column="idCardNo" property="idCardNo"/>
+        <result column="ownerName" property="ownerName"/>
+        <result column="phone" property="phone"/>
+        <result column="ownerAddress" property="ownerAddress"/>
+        <result column="creator" property="creator"/>
+        <result column="createdTime" property="createdTime"/>
+        <result column="modifier" property="modifier"/>
+        <result column="modifiedTime" property="modifiedTime"/>
+        <result column="vehicleBodyColor" property="vehicleBodyColor"/>
+        <result column="vehicleBrand" property="vehicleBrand"/>
+        <result column="roomNo" property="roomNo"/>
+    </resultMap>
+
+    <resultMap id="vehicleVoResultMap" type="cn.citms.icw.vo.VehicleVO" extends="vehicleResultMap">
+        <result column="xqmc" property="sqmc"/>
+        <result column="xqbm" property="sqbm"/>
+    </resultMap>
+    <update id="batchInsert">
+        INSERT INTO sq_vehicle (vehicleId,communityId,createdTime,creator,plateNo,plateColor,plateType,ownerName,roomNo,phone,idCardNo,ownerAddress,vehicleBodyColor,vehicleBrand)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.vehicleId},#{item.communityId},#{item.createdTime},#{item.creator},#{item.plateNo},#{item.plateColor},#{item.plateType},
+            #{item.ownerName},#{item.roomNo},#{item.phone},#{item.idCardNo},#{item.ownerAddress},#{item.vehicleBodyColor},#{item.vehicleBrand})
+        </foreach>
+    </update>
+
+
+    <select id="selectVehiclePage" resultMap="vehicleVoResultMap">
+        select t2.xqmc,t2.xqbm,t1.* from sq_vehicle t1
+        left join sq_community t2 on t1.communityId=t2.id
+        <where>
+            <if test="vo.plateNo != null and vo.plateNo != ''">
+                and t1.plateNo = #{vo.plateNo}
+            </if>
+            <if test="vo.plateType != null and vo.plateType != ''">
+                and t1.plateType  = #{vo.plateType}
+            </if>
+            <if test="vo.sqmc != null and vo.sqmc != ''">
+                and t2.xqmc = #{vo.sqmc}
+            </if>
+            <if test="vo.communityId != null and vo.communityId != ''">
+                and t1.communityId = #{vo.communityId}
+            </if>
+            <if test="vo.ownerName != null and vo.ownerName != ''">
+                and t1.ownerName like concat('%', #{vo.ownerName}, '%')
+            </if>
+            <if test="vo.phone != null and vo.phone != ''">
+                and t1.phone like concat('%', #{vo.phone}, '%')
+            </if>
+            <if test="vo.ownerAddress != null and vo.ownerAddress != ''">
+                and t1.ownerAddress like concat('%', #{vo.ownerAddress}, '%')
+            </if>
+            <if test="vo.registeBeginTime != null">
+                and t1.createdTime >= #{vo.registeBeginTime}
+            </if>
+            <if test="vo.registeEndTime != null">
+                and t1.createdTime &lt;= #{vo.registeEndTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="findVehicle" resultMap="vehicleVoResultMap">
+        select t2.xqmc,t2.xqbm,t1.* from sq_vehicle t1
+        left join sq_community t2 on t1.communityId=t2.id
+        <where>
+            <if test="id != null and id != ''">
+                and t1.vehicleId = #{id}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectVehicleInCardNos" resultType="cn.citms.icw.dto.VehicleDTO">
+        SELECT * FROM sq_vehicle b WHERE 1=1
+        AND b.idCardNo in
+        <foreach collection="cardNos" item="cardNo" index="index" open="(" close=")" separator=",">
+            #{cardNo}
+        </foreach>
+        ORDER BY idCardNo
+    </select>
+
+    <select id="getLocalVehicle" resultType="java.lang.Double">
+        SELECT count(*) FROM sq_vehicle b WHERE b.plateNo like CONCAT(#{localPlateMark},'%')
+        <if test="communityId != null and communityId != ''">
+            and b.communityId = #{communityId}
+        </if>
+    </select>
+
+    <select id="getLocalProvinceOtherCityVehicle" resultType="java.lang.Double">
+        SELECT count(*) FROM sq_vehicle b WHERE b.plateNo like CONCAT(#{provincePlateMark},'%') AND substring(b.plateNo,1,2) != #{localPlateMark}
+        <if test="communityId != null and communityId != ''">
+            and b.communityId = #{communityId}
+        </if>
+    </select>
+
+    <select id="getOtherProvinceVehicle" resultType="java.lang.Double">
+        SELECT count(*) FROM sq_vehicle b WHERE substring(b.plateNo,1,1) != #{provincePlateMark}
+        <if test="communityId != null and communityId != ''">
+            and b.communityId = #{communityId}
+        </if>
+    </select>
+
+    <select id="getVehicleByStartMonthAndEndMonth" resultType="java.lang.Double">
+        SELECT count(*) FROM sq_vehicle b WHERE b.createdTime &gt;= #{monthStart} and b.createdTime &lt;= #{monthEnd}
+        <if test="communityId != null and communityId != ''">
+            and b.communityId = #{communityId}
+        </if>
+    </select>
+
+    <select id="getVehicleCountByPlateType" resultType="java.lang.Double">
+        SELECT count(*) FROM sq_vehicle b WHERE b.plateType = #{plateType}
+        <if test="communityId != null and communityId != ''">
+            and b.communityId = #{communityId}
+        </if>
+    </select>
+
+    <select id="countVehicle" resultType="java.lang.Double">
+        SELECT count(*) FROM sq_vehicle b WHERE 1=1
+        <if test="communityId != null and communityId != ''">
+            and b.communityId = #{communityId}
+        </if>
+    </select>
+    <select id="selectByCommunityIds" resultType="cn.citms.icw.entity.Vehicle">
+        select * from sq_vehicle where communityId in
+        <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+</mapper>

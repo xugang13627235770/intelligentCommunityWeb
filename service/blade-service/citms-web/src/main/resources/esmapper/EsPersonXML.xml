@@ -1,0 +1,147 @@
+<properties>
+
+    <property name="queryPerson">
+        <![CDATA[
+       {
+	"query": {
+		"bool": {
+			"must": [
+			#set( $needComma = false )
+			#if($idCardNo && !$idCardNo.equals(""))
+			 {
+                    "match": {
+                        "idCardNo": #[idCardNo]
+                    }
+                }
+             #set( $needComma = true )
+             #end
+
+            #if($name && !$name.equals(""))
+             #if($needComma),#else #set( $needComma = true ) #end
+                {
+                	"match": {
+                        "name": #[name]
+                    }
+                }
+              #end
+
+                #if($isValidate && !$isValidate.equals(""))
+             #if($needComma),#else #set( $needComma = true ) #end
+                {
+                	"term": {
+                        "isValidate": #[isValidate]
+                    }
+                }
+            #end
+
+             #if($deviceNo && !$deviceNo.equals(""))
+             #if($needComma),#else #set( $needComma = true ) #end
+                {
+                	"term": {
+                        "deviceNo": #[deviceNo]
+                    }
+                }
+            #end
+
+             #if($exts && $exts.size()> 0)
+	        #if($needComma),#else #set( $needComma = true ) #end
+                {
+                	 "terms": {
+                       "ext": #[exts,serialJson=true]
+                    }
+                }
+            #end
+			]
+			,
+            "filter": [
+                #if($startTime && !$startTime.equals("")&& $endTime && !$endTime.equals(""))
+                {
+                    "range":
+                    {
+                        "captureTime": {
+                            "gte": #[startTime],
+	                		"lte": #[endTime]
+                        }
+                    }
+                }
+                #end
+            ]
+
+		}
+	},
+	 "from": #[pageIndex],
+                   "size": #[pageSize],
+	"sort": [{
+                            "captureTime": {
+                                "order": "desc"
+                            }
+                        },{
+                            "_score": {
+                                "order": "desc"
+                            }
+                        }]
+}
+]]>
+    </property>
+
+    <property name="findById">
+        <![CDATA[
+       {
+	"query": {
+		"bool": {
+			"must": [
+			     #if($uuid && !$uuid.equals(""))
+                {
+                	"term": {
+                        "uuid": #[uuid]
+                    }
+                }
+            #end
+			]
+
+		}
+	}
+}
+]]>
+    </property>
+
+    <property name="queryPersonStatistic">
+        <![CDATA[
+       {
+    "size": 0,
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "range": {
+                        "captureTime": {
+                            "gte": #[startTime],
+                            "lte": #[endTime]
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    "aggs": {
+        "groupDate": {
+            "date_histogram": {
+                "field": "captureTime",
+                "interval": #[dateField],
+                "format": #[dateFormat],
+                "time_zone": "Asia/Shanghai",
+                "extended_bounds": {
+                    "min": #[minDate],
+                    "max": #[maxDate]
+                }
+
+            }
+        }
+
+    }
+}
+]]>
+    </property>
+
+
+</properties>

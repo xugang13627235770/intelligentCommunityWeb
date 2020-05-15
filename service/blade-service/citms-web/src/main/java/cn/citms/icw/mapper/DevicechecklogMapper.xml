@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.citms.icw.mapper.DevicechecklogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="devicechecklogResultMap" type="cn.citms.icw.entity.Devicechecklog">
+        <id column="id" property="id"/>
+        <result column="status" property="status"/>
+        <result column="checkTime" property="checkTime"/>
+    </resultMap>
+
+
+    <select id="selectDevicechecklogPage" resultMap="devicechecklogResultMap">
+        select * from sq_devicechecklog where is_deleted = 0
+    </select>
+
+</mapper>

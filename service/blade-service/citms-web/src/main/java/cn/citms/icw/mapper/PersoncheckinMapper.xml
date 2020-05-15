@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.citms.icw.mapper.PersoncheckinMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="personcheckinResultMap" type="cn.citms.icw.entity.Personcheckin">
+        <id column="id" property="id"/>
+        <result column="xm" property="xm"/>
+        <result column="xbdm" property="xbdm"/>
+        <result column="csrq" property="csrq"/>
+        <result column="rylx" property="rylx"/>
+        <result column="ry_bs" property="ry_Bs"/>
+        <result column="lxfs" property="lxfs"/>
+        <result column="sjhm" property="sjhm"/>
+        <result column="mzdm" property="mzdm"/>
+        <result column="whcddm" property="whcddm"/>
+        <result column="hyzkdm" property="hyzkdm"/>
+        <result column="cyzjlxdm" property="cyzjlxdm"/>
+        <result column="zjhm" property="zjhm"/>
+        <result column="gjdm" property="gjdm"/>
+        <result column="gjdz" property="gjdz"/>
+        <result column="jgmc" property="jgmc"/>
+        <result column="hjdz_xzqhdm" property="hjdz_Xzqhdm"/>
+        <result column="hjdz_dzmc" property="hjdz_Dzmc"/>
+        <result column="blsj" property="blsj"/>
+        <result column="yhbs" property="yhbs"/>
+        <result column="ypzgxdm" property="ypzgxdm"/>
+        <result column="jzsy" property="jzsy"/>
+        <result column="jzfs_mc" property="jzfs_Mc"/>
+        <result column="jz_qx" property="jz_Qx"/>
+        <result column="rz_rqsj" property="rz_Rqsj"/>
+        <result column="cl_rqsj" property="cl_Rqsj"/>
+        <result column="cc_rqsj" property="ccRqsj"/>
+        <result column="zylbdm" property="zylbdm"/>
+        <result column="zdry_pdbs" property="zdry_Pdbs"/>
+        <result column="jjlxr_xm" property="jjlxr_Xm"/>
+        <result column="jjlxr_lxdh" property="jjlxr_Lxdh"/>
+        <result column="fk_xm" property="fk_Xm"/>
+        <result column="fk_sjhm" property="fk_Sjhm"/>
+        <result column="fwsy_jyqk" property="fwsy_Jyqk"/>
+        <result column="fw_rqsj" property="fw_Rqsj"/>
+        <result column="fwry_xm" property="fwry_Xm"/>
+        <result column="unit_id" property="unit_Id"/>
+        <result column="house_id" property="house_Id"/>
+        <result column="building_id" property="building_Id"/>
+        <result column="community_id" property="community_Id"/>
+        <result column="fwdw" property="fwdw"/>
+        <result column="zzcs" property="zzcs"/>
+    </resultMap>
+
+    <!-- 住户关联社区/单元/楼栋/门户查询映射结果 -->
+    <resultMap id="personcheckinRelationResultMap" type="cn.citms.icw.dto.PersoncheckinDTO">
+        <id column="id" property="id"/>
+        <result column="xm" property="xm"/>
+        <result column="xbdm" property="xbdm"/>
+        <result column="csrq" property="csrq"/>
+        <result column="rylx" property="rylx"/>
+        <result column="ry_bs" property="ry_Bs"/>
+        <result column="lxfs" property="lxfs"/>
+        <result column="sjhm" property="sjhm"/>
+        <result column="mzdm" property="mzdm"/>
+        <result column="whcddm" property="whcddm"/>
+        <result column="hyzkdm" property="hyzkdm"/>
+        <result column="cyzjlxdm" property="cyzjlxdm"/>
+        <result column="zjhm" property="zjhm"/>
+        <result column="gjdm" property="gjdm"/>
+        <result column="gjdz" property="gjdz"/>
+        <result column="jgmc" property="jgmc"/>
+        <result column="hjdz_xzqhdm" property="hjdz_Xzqhdm"/>
+        <result column="hjdz_dzmc" property="hjdz_Dzmc"/>
+        <result column="blsj" property="blsj"/>
+        <result column="yhbs" property="yhbs"/>
+        <result column="ypzgxdm" property="ypzgxdm"/>
+        <result column="jzsy" property="jzsy"/>
+        <result column="jzfs_mc" property="jzfs_Mc"/>
+        <result column="jz_qx" property="jz_Qx"/>
+        <result column="rz_rqsj" property="rz_Rqsj"/>
+        <result column="cl_rqsj" property="cl_Rqsj"/>
+        <result column="cc_rqsj" property="ccRqsj"/>
+        <result column="zylbdm" property="zylbdm"/>
+        <result column="zdry_pdbs" property="zdry_Pdbs"/>
+        <result column="jjlxr_xm" property="jjlxr_Xm"/>
+        <result column="jjlxr_lxdh" property="jjlxr_Lxdh"/>
+        <result column="fk_xm" property="fk_Xm"/>
+        <result column="fk_sjhm" property="fk_Sjhm"/>
+        <result column="fwsy_jyqk" property="fwsy_Jyqk"/>
+        <result column="fw_rqsj" property="fw_Rqsj"/>
+        <result column="fwry_xm" property="fwry_Xm"/>
+        <result column="unit_id" property="unit_Id"/>
+        <result column="house_id" property="house_Id"/>
+        <result column="building_id" property="building_Id"/>
+        <result column="community_id" property="community_Id"/>
+        <result column="fwdw" property="fwdw"/>
+        <result column="zzcs" property="zzcs"/>
+
+        <result column="mhmc" property="mhmc"/>
+        <result column="houseId" property="houseId"/>
+        <result column="fwzt" property="fwZt"/>
+        <result column="ldmc" property="ldmc"/>
+        <result column="dymc" property="dymc"/>
+        <result column="sqmc" property="sqmc"/>
+    </resultMap>
+    <update id="batchInsert">
+        INSERT INTO sq_personcheckin (id,community_id,building_id,unit_id,house_id,xm,rylx,xbdm,zjhm,csrq,mzdm,whcddm,hyzkdm,
+        gjdz,jgmc,hjdz_dzmc,yhbs,fwdw,zylbdm,jzsy,zzcs,lxfs,rz_rqsj,cl_rqsj,jjlxr_xm,jjlxr_lxdh,fw_rqsj,fwry_xm,blsj)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id},#{item.community_Id},#{item.building_Id},#{item.unit_Id},#{item.house_Id},#{item.xm},#{item.rylx},
+            #{item.xbdm},#{item.zjhm},#{item.csrq},#{item.mzdm},#{item.whcddm},#{item.hyzkdm},#{item.gjdz},#{item.jgmc},
+            #{item.hjdz_Dzmc},#{item.yhbs},#{item.fwdw},#{item.zylbdm},#{item.jzsy},#{item.zzcs},#{item.lxfs},#{item.rz_Rqsj},
+            #{item.cl_Rqsj},#{item.jjlxr_Xm},#{item.jjlxr_Lxdh},#{item.fw_Rqsj},#{item.fwry_Xm},#{item.blsj})
+        </foreach>
+    </update>
+
+
+    <select id="selectPersoncheckinPage" resultMap="personcheckinRelationResultMap">
+        select sp.*,ifnull(sh.fw_bh,'') mhmc,ifnull(sh.id,'') houseId,sh.fw_zt fwzt,ifnull(su.dy_mc,'') dymc,ifnull(sb.ldh_mc,'') ldmc,
+                ifnull(sc.xqmc,'') sqmc from sq_personcheckin sp
+                left join sq_house sh on sh.id = sp.house_id
+                left join sq_unit su on su.id = sp.unit_id
+                left join sq_building sb on sb.id = sp.building_id
+                left join sq_community sc on sc.id = sp.community_id
+            <where>
+                <if test="vo.id!=null and vo.id !=''">
+                    and sp.id like '%${vo.id}%'
+                </if>
+                <if test="vo.xm!=null and vo.xm !=''">
+                    and sp.xm like '%${vo.xm}%'
+                </if>
+                <if test="vo.xbdm!=null and vo.xbdm !=''">
+                    and sp.xbdm = #{vo.xbdm}
+                </if>
+                <if test="vo.rylx!=null and vo.rylx !=''">
+                    and sp.rylx = #{vo.rylx}
+                </if>
+                <if test="vo.community_Id!=null and vo.community_Id !=''">
+                    and sp.community_id = #{vo.community_Id}
+                </if>
+                <if test="vo.communityIds !=null and vo.communityIds.size()>0">
+                    and sp.community_id in
+                    <foreach collection="vo.communityIds" open="(" close=")" separator="," item="item">
+                        #{item}
+                    </foreach>
+                </if>
+                <if test="vo.building_Id!=null and vo.building_Id !=''">
+                    and sp.building_id = #{vo.building_Id}
+                </if>
+
+                <if test="vo.unit_Id!=null and vo.unit_Id !=''">
+                    and sp.unit_id = #{vo.unit_Id}
+                </if>
+                <if test="vo.house_Id!=null and vo.house_Id !=''">
+                    and sp.house_id = #{vo.house_Id}
+                </if>
+                <if test="vo.zhInfo!=null and vo.zhInfo !=''">
+                    and (sp.xm like '%${vo.zhInfo}%'  or sp.zjhm like '%${vo.zhInfo}%')
+                </if>
+                <if test="vo.mhmc!=null and vo.mhmc !=''">
+                    and sh.fw_bh like '%${vo.mhmc}%'
+                </if>
+            </where>
+         <!--   <if test="vo.sortField !=null and vo.sortField !=''">
+                order by #{vo.sortField}
+                <if test="vo.sortOrder !=null and vo.sortOrder !=''">
+                    #{vo.sortOrder}
+                </if>
+                <if test="vo.sortOrder ==null or vo.sortOrder ==''">
+                    desc
+                </if>
+            </if>-->
+    </select>
+
+    <select id="getPersonCheckInDetail" parameterType="string" resultMap="personcheckinRelationResultMap">
+        select sp.*,ifnull(sh.fw_bh,'') mhmc,ifnull(sh.id,'') houseId,sh.fw_zt fwzt,ifnull(su.dy_mc,'') dymc,ifnull(sb.ldh_mc,'') ldmc,
+                ifnull(sc.xqmc,'') sqmc from sq_personcheckin sp
+                left join sq_house sh on sh.id = sp.house_id
+                left join sq_unit su on su.id = sp.unit_id
+                left join sq_building sb on sb.id = sp.building_id
+                left join sq_community sc on sc.id = sp.community_id
+             where sp.id = #{id}  limit 1
+    </select>
+
+    <select id="getAllPersonCheckin" resultMap="personcheckinRelationResultMap">
+         select sp.id,
+                sp.xm,
+                sp.xbdm,
+                sp.csrq,
+                sp.rylx,
+                sp.ry_bs,
+                sp.lxfs,
+                sp.sjhm,
+                sp.mzdm,
+                sp.whcddm,
+                sp.hyzkdm,
+                sp.cyzjlxdm,
+                sp.cyzjlxdm,
+                sp.zjhm,
+                sp.gjdm,
+                sp.gjdm,
+                sp.gjdz,
+                sp.jgmc hjdz_xzqhdm,
+                sp.hjdz_dzmc,
+                sp.blsj,
+                sp.yhbs,
+                sp.jzsy,
+                sp.jzfs_mc,
+                sp.jz_qx,
+                sp.rz_rqsj,
+                sp.cl_rqsj,
+                sp.cc_rqsj,
+                sp.zylbdm,
+                sp.zdry_pdbs,
+                sp.jjlxr_xm,
+                sp.jjlxr_lxdh,
+                sp.fk_xm,
+                sp.fk_sjhm,
+                sp.fwsy_jyqk,
+                sp.fw_rqsj,
+                sp.fwry_xm,
+                sp.unit_id,
+                sp.house_id,
+                sp.building_id,
+                sp.community_id,
+                sp.fwdw,
+                sp.zzcs,
+	            ifnull(sh.fw_bh,'') mhmc,ifnull(sh.id,'') houseId,sh.fw_zt fwzt,ifnull(su.dy_mc,'') dymc,ifnull(sb.ldh_mc,'') ldmc,
+                ifnull(sc.xqmc,'') sqmc from sq_personcheckin sp
+                left join sq_house sh on sh.id = sp.house_id
+                left join sq_unit su on su.id = sp.unit_id
+                left join sq_building sb on sb.id = sp.building_id
+                left join sq_community sc on sc.id = sp.community_id
+    </select>
+
+    <select id="manageFindById" resultType="cn.citms.icw.dto.PersoncheckinDTO">
+        SELECT * FROM sq_personcheckin b WHERE b.house_id=#{id} ORDER BY rylx
+    </select>
+
+    <select id="selectCountBandingPersoncheckinById" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM sq_personcheckin b WHERE b.house_id=#{id}
+    </select>
+
+    <select id="countPerson" resultType="java.lang.Double">
+        SELECT COUNT(*) FROM sq_personcheckin b WHERE 1=1
+        <if test="communityId != null and communityId != ''">
+            and b.community_id = #{communityId}
+        </if>
+    </select>
+
+    <select id="getCheckInRylxCnt" resultType="cn.citms.icw.vo.SelectCntVO">
+        SELECT rylx as name,COUNT(*) as `value` FROM sq_personcheckin WHERE community_id IN
+        <foreach collection="communityIds" item="communityId" index="index" open="(" close=")" separator=",">
+            #{communityId}
+        </foreach>
+        <![CDATA[ AND rylx <> '']]>
+        GROUP BY rylx
+    </select>
+    <select id="getCheckInYhbsCnt" resultType="cn.citms.icw.vo.SelectCntVO">
+        SELECT yhbs as name,COUNT(*) as `value` FROM sq_personcheckin WHERE community_id IN
+        <foreach collection="communityIds" item="communityId" index="index" open="(" close=")" separator=",">
+            #{communityId}
+        </foreach>
+        <![CDATA[ AND yhbs <> '']]>
+        GROUP BY yhbs
+    </select>
+    <select id="getCheckInZdryCnt" resultType="cn.citms.icw.vo.SelectCntVO">
+        SELECT zdry_pdbs as name,COUNT(*) as `value` FROM sq_personcheckin WHERE community_id IN
+        <foreach collection="communityIds" item="communityId" index="index" open="(" close=")" separator=",">
+            #{communityId}
+        </foreach>
+        <![CDATA[ AND zdry_pdbs <> '']]>
+        GROUP BY zdry_pdbs
+    </select>
+    <select id="getCheckInCnt" resultType="java.lang.Integer">
+        SELECT COUNT(*) as `value` FROM sq_personcheckin WHERE community_id IN
+        <foreach collection="communityIds" item="communityId" index="index" open="(" close=")" separator=",">
+            #{communityId}
+        </foreach>
+    </select>
+    <select id="findGroupByHouseId" resultType="cn.citms.icw.vo.SelectCntVO">
+        SELECT b.`value` AS `name`,COUNT(*) AS `value` FROM (
+        SELECT house_id AS `name`,COUNT(*) as `value` FROM sq_personcheckin GROUP BY house_id
+        ) b GROUP BY b.`value`
+    </select>
+    <select id="findGroupByHouseId2" resultType="cn.citms.icw.vo.SelectCntVO">
+        SELECT house_id AS `name`,GROUP_CONCAT(zjhm) zjhm,COUNT(*) as `value` FROM sq_personcheckin GROUP BY house_id
+    </select>
+    <select id="getPersoncheckinByTime" resultType="cn.citms.icw.entity.StatisticTypeTotal">
+        SELECT c.dic_blsj as `type`, COUNT(*) as `count` FROM (
+        SELECT DATE_FORMAT(b.blsj, '%Y-%m') as dic_blsj,b.* FROM sq_personcheckin b WHERE b.community_id IN
+        <foreach collection="communityIds" item="communityId" index="index" open="(" close=")" separator=",">
+            #{communityId}
+        </foreach>
+        <![CDATA[ AND b.blsj > DATE_SUB(CURDATE(), INTERVAL 1 YEAR)]]>
+        ) c GROUP BY c.dic_blsj  ORDER BY c.dic_blsj
+    </select>
+
+    <select id="countGroupbyPersonType" parameterType="string" resultType="cn.citms.icw.dto.CommonCountDTO">
+        select rylx keyName,count(*) count from  sq_personcheckin where rylx is not null
+        <if test="ids !=null and ids.size()>0">
+            and community_id in
+            <foreach collection="ids" open="(" close=")" separator="," item="item">
+                #{item}
+            </foreach>
+        </if>
+        group by rylx
+    </select>
+    <select id="selectPersonByCommunityIds" resultType="cn.citms.icw.entity.Personcheckin">
+        select * from sq_personcheckin where community_id in
+        <foreach collection="ids" open="(" close=")" separator="," item="item">
+            #{item}
+        </foreach>
+    </select>
+
+</mapper>

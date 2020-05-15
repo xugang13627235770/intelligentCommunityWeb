@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.citms.icw.mapper.NoticeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="noticeResultMap" type="cn.citms.icw.entity.Notice">
+        <id column="noticeId" property="noticeId"/>
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+        <result column="userCode" property="userCode"/>
+        <result column="noticeType" property="noticeType"/>
+        <result column="pubTime" property="pubTime"/>
+        <result column="dueTime" property="dueTime"/>
+        <result column="communityId" property="communityId"/>
+        <result column="dqjd" property="dqjd"/>
+        <result column="dqwd" property="dqwd"/>
+    </resultMap>
+
+    <select id="selectNoticePage" resultMap="noticeResultMap">
+        select * from sq_notice b where 1=1
+        <if test="vo.id != null and vo.id != ''">
+            and b.noticeId = #{vo.id}
+        </if>
+        <if test="vo.keyWord != null and vo.keyWord != ''">
+            <bind name="keyWord" value="'%' + vo.keyWord + '%'" />
+             and (b.title like #{keyWord} or b.content like #{keyWord})
+        </if>
+        <if test="vo.noticeType != null and vo.noticeType != ''">
+            and b.noticeType = #{vo.noticeType}
+        </if>
+        <if test="vo.pubStartTime != null">
+            and b.pubTime &gt;= #{vo.pubStartTime}
+        </if>
+        <if test="vo.pubEndTime != null">
+            and b.pubTime &lt;= #{vo.pubEndTime}
+        </if>
+        <if test="vo.dueStartTime != null">
+            and b.dueTime &gt;= #{vo.dueStartTime}
+        </if>
+        <if test="vo.dueEndTime != null">
+            and b.dueTime &lt;= #{vo.dueEndTime}
+        </if>
+        <if test="vo.communityId != null and vo.communityId != ''">
+            and b.communityId = #{vo.communityId}
+        </if>
+        <if test="vo.communityIds != null and vo.communityIds.size > 0">
+            and b.communityId in
+            <foreach collection="vo.communityIds" item="communityId" index="index" open="(" close=")" separator=",">
+                #{communityId}
+            </foreach>
+        </if>
+        <if test="vo.sortField != null and vo.sortField != ''">
+            order by ${vo.sortField}
+            <if test="vo.sortOrder != null and vo.sortOrder != ''">
+                ${vo.sortOrder}
+            </if>
+        </if>
+    </select>
+
+    <select id="selectAll" resultMap="noticeResultMap">
+        select * from sq_notice
+    </select>
+
+    <select id="findByUserCode" resultMap="noticeResultMap">
+        SELECT * FROM sq_notice WHERE userCode=#{userCode} ORDER BY pubTime desc
+    </select>
+
+</mapper>

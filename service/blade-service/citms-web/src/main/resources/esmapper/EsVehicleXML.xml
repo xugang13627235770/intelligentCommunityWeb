@@ -1,0 +1,149 @@
+<properties>
+
+    <property name="queryVehicle">
+        <![CDATA[
+       {
+	"query": {
+		"bool": {
+			"must": [
+			#set( $needComma = false )
+			#if($plateNo && !$plateNo.equals(""))
+			 {
+                    "match": {
+                        "plate_no": #[plateNo]
+                    }
+                }
+             #set( $needComma = true )
+             #end
+
+            #if($plateColor && !$plateColor.equals(""))
+             #if($needComma),#else #set( $needComma = true ) #end
+                {
+                	"match": {
+                        "plate_color": #[plateColor]
+                    }
+                }
+              #end
+
+            #if($platNos && $platNos.size()> 0)
+	        #if($needComma),#else #set( $needComma = true ) #end
+                {
+                	 "terms": {
+                       "plate_no": #[platNos,serialJson=true]
+                    }
+                }
+            #end
+
+
+             #if($deviceNo && !$deviceNo.equals(""))
+             #if($needComma),#else #set( $needComma = true ) #end
+                {
+                	"term": {
+                        "deviceNo": #[deviceNo]
+                    }
+                }
+            #end
+
+             #if($xqbh && $xqbh.size()> 0)
+	        #if($needComma),#else #set( $needComma = true ) #end
+                {
+                	 "terms": {
+                       "ext": #[xqbh,serialJson=true]
+                    }
+                }
+            #end
+			]
+			,
+            "filter": [
+                #if($startTime && !$startTime.equals("")&& $endTime && !$endTime.equals(""))
+                {
+                    "range":
+                    {
+                        "pass_timestamp": {
+                            "gte": #[startTime],
+	                		"lte": #[endTime]
+                        }
+                    }
+                }
+                #end
+            ]
+
+		}
+	},
+	 "from": #[pageIndex],
+                   "size": #[pageSize],
+	"sort": [{
+                            "captureTime": {
+                                "order": "desc"
+                            }
+                        },{
+                            "_score": {
+                                "order": "desc"
+                            }
+                        }]
+}
+]]>
+    </property>
+
+    <property name="findById">
+        <![CDATA[
+       {
+	"query": {
+		"bool": {
+			"must": [
+			     #if($uuid && !$uuid.equals(""))
+                {
+                	"term": {
+                        "uuid": #[uuid]
+                    }
+                }
+            #end
+			]
+
+		}
+	}
+}
+]]>
+    </property>
+
+
+    <property name="queryVehicleStatistic">
+        <![CDATA[
+       {
+    "size": 0,
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "range": {
+                        "captureTime": {
+                            "gte": #[startTime],
+                            "lte": #[endTime]
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    "aggs": {
+        "groupDate": {
+            "date_histogram": {
+                "field": "captureTime",
+                "interval": #[dateField],
+                "format": #[dateFormat],
+                "time_zone": "Asia/Shanghai",
+                "extended_bounds": {
+                    "min": #[minDate],
+                    "max": #[maxDate]
+                }
+
+            }
+        }
+
+    }
+}
+]]>
+    </property>
+
+
+</properties>

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.citms.icw.mapper.CommunityMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="communityResultMap" type="cn.citms.icw.entity.Community">
+        <id column="id" property="id"/>
+        <result column="xqmc" property="xqmc"/>
+        <result column="xqbm" property="xqbm"/>
+        <result column="xq_bs" property="xq_Bs"/>
+        <result column="xqdz" property="xqdz"/>
+        <result column="jlxmc" property="jlxmc"/>
+        <result column="sqlx" property="sqlx"/>
+        <result column="jcnf" property="jcnf"/>
+        <result column="cjsj" property="cjsj"/>
+        <result column="zdmj" property="zdmj"/>
+        <result column="csqdm" property="csqdm"/>
+        <result column="csq_mc" property="csq_Mc"/>
+        <result column="sqjcwhmc" property="sqjcwhmc"/>
+        <result column="sdm" property="sdm"/>
+        <result column="sf_mc" property="sf_Mc"/>
+        <result column="qxdm" property="qxdm"/>
+        <result column="qxmc" property="qxmc"/>
+        <result column="shdm" property="shdm"/>
+        <result column="smc" property="smc"/>
+        <result column="xzjddm" property="xzjddm"/>
+        <result column="xzjdmc" property="xzjdmc"/>
+        <result column="ssxq" property="ssxq"/>
+        <result column="zqmj" property="zqmj"/>
+        <result column="jwsrs" property="jwsrs"/>
+        <result column="sszrqdm" property="sszrqdm"/>
+        <result column="fwcs" property="fwcs"/>
+        <result column="dqjd" property="dqjd"/>
+        <result column="dqwd" property="dqwd"/>
+        <result column="wymc" property="wymc"/>
+        <result column="wyfzr" property="wyfzr"/>
+        <result column="fwzmc" property="fwzmc"/>
+        <result column="fwzrs" property="fwzrs"/>
+    </resultMap>
+
+    <select id="selectCommunityPage" resultMap="communityResultMap">
+        select * from sq_community
+        <where>
+            <if test="vo.xqmc !=null and vo.xqmc !=''">
+                and xqmc like '%${vo.xqmc}%'
+            </if>
+            <if test="vo.xqbm !=null and vo.xqbm.size()>0">
+                and xqbm in
+                  <foreach collection="vo.xqbm" open="(" close=")" separator="," item="item">
+                        #{item}
+                  </foreach>
+            </if>
+            <if test="vo.communityIds !=null and vo.communityIds.size()>0">
+                and id in
+                <foreach collection="vo.communityIds" open="(" close=")" separator="," item="item">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="vo.sqlx !=null and vo.sqlx !=''">
+              and sqlx = #{vo.sqlx}
+            </if>
+            <if test="vo.ssxq !=null and vo.ssxq !=''">
+                and ssxq = #{vo.ssxq}
+            </if>
+            <if test="vo.keyword !=null and vo.keyword !=''">
+                and xqmc like '%${vo.keyword}%'
+            </if>
+            <if test="vo.startTime !=null ">
+                and cjsj &gt;= #{vo.startTime}
+            </if>
+            <if test="vo.endTime !=null ">
+                and cjsj &lt;= #{vo.endTime}
+            </if>
+        </where>
+        <!--<if test="vo.sortField !=null and vo.sortField !=''">
+            order by #{vo.sortField}
+            <if test="vo.sortOrder !=null and vo.sortOrder !=''">
+                #{vo.sortOrder}
+            </if>
+            <if test="vo.sortOrder ==null or vo.sortOrder ==''">
+                desc
+            </if>
+        </if>-->
+    </select>
+
+    <select id="findAll" resultMap="communityResultMap">
+        select id,xqmc,xqbm, xq_bs, xqdz,jlxmc,sqlx,jcnf,cjsj,zdmj,csqdm,csq_mc,sqjcwhmc,sdm,sf_mc,qxdm
+            qxmc, shdm, smc,xzjddm,xzjdmc,ssxq,zqmj,jwsrs,sszrqdm,fwcs,dqjd,dqwd,wymc,wyfzr,fwzmc,fwzrs
+          from sq_community
+    </select>
+
+    <select id="selectCommunityIdByDeptIds" resultType="java.lang.String">
+        SELECT ID FROM sq_community WHERE 1=1
+        <if test="ids != null and ids.size>0">
+            and ssxq IN
+            <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="selectCommunityInfoByDeptIds" resultMap="communityResultMap">
+        SELECT * FROM sq_community WHERE ssxq IN
+        <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="selectCommunityNoByDeptIds" resultType="java.lang.String">
+        SELECT xqbm FROM sq_community WHERE ssxq IN
+        <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="selectCommunityByIdIn" resultType="cn.citms.icw.entity.Community">
+        SELECT * FROM sq_community b WHERE 1=1
+        <if test="ids != null and ids.size>0">
+            and b.id IN
+            <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="selectCommunityNameById" resultType="cn.citms.icw.entity.Community">
+        SELECT * FROM sq_community b WHERE b.id = #{id}
+    </select>
+
+    <select id="countCommunityTypeByCommuityIds" parameterType="string" resultType="cn.citms.icw.dto.CommonCountDTO">
+          select sqlx keyName,count(*) count from sq_community
+            <where>
+                <if test="ids !=null and ids.size()>0">
+                    and id in
+                    <foreach collection="ids" open="(" close=")" separator="," item="item">
+                        #{item}
+                    </foreach>
+                </if>
+            </where>
+        GROUP BY sqlx
+    </select>
+
+    <select id="countBasicCount" parameterType="string" resultType="cn.citms.icw.dto.CommonCountDTO">
+        select 'building' as keyName, ifnull(count(sq_building.id),0) count from sq_building
+            <where>
+                <if test="ids !=null and ids.size()>0">
+                    and community_id in
+                    <foreach collection="ids" open="(" close=")" separator="," item="item">
+                        #{item}
+                    </foreach>
+                </if>
+            </where>
+        union all
+        select 'house' as keyName,ifnull(count(sq_house.id),0) count from sq_house
+            <where>
+                <if test="ids !=null and ids.size()>0">
+                    and community_id in
+                    <foreach collection="ids" open="(" close=")" separator="," item="item">
+                        #{item}
+                    </foreach>
+                </if>
+            </where>
+        union all
+        select 'person' as keyName,ifnull(count(sq_personcheckin.id),0) count from sq_personcheckin
+            <where>
+                <if test="ids !=null and ids.size()>0">
+                    and community_id in
+                    <foreach collection="ids" open="(" close=")" separator="," item="item">
+                        #{item}
+                    </foreach>
+                </if>
+            </where>
+        union all
+        select 'vehicle' as keyName,ifnull(count(sq_vehicle.vehicleId),0) count from sq_vehicle
+            <where>
+                <if test="ids !=null and ids.size()>0">
+                    and communityId in
+                    <foreach collection="ids" open="(" close=")" separator="," item="item">
+                        #{item}
+                    </foreach>
+                </if>
+            </where>
+    </select>
+
+    <select id="selectCommunityNameBySqmc" resultType="java.lang.String">
+        SELECT xqmc FROM sq_community WHERE xqmc in
+        <foreach collection="list" open="(" close=")" separator="," item="item">
+            #{item}
+        </foreach>
+    </select>
+    <select id="selectCommunityBmBySqmc" resultType="java.lang.String">
+        SELECT xqbm FROM sq_community WHERE xqbm in
+        <foreach collection="list" open="(" close=")" separator="," item="item">
+            #{item}
+        </foreach>
+    </select>
+    <insert id="batchInsert">
+        INSERT INTO sq_community (id,xqmc,xqbm,cjsj,xqdz,sqlx,dqjd,dqwd,ssxq,zqmj,jwsrs,jlxmc,sqjcwhmc,zdmj,fwcs,wymc,wyfzr,fwzmc,fwzrs)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id},#{item.xqmc},#{item.xqbm},#{item.cjsj},#{item.xqdz},#{item.sqlx},#{item.dqjd},#{item.dqwd},#{item.ssxq},#{item.zqmj},#{item.jwsrs},#{item.jlxmc},#{item.sqjcwhmc},#{item.zdmj},#{item.fwcs},#{item.wymc},#{item.wyfzr},#{item.fwzmc},#{item.fwzrs})
+        </foreach>
+    </insert>
+
+</mapper>

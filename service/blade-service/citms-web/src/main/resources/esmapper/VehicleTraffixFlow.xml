@@ -1,0 +1,87 @@
+<properties>
+
+    <property name="getVehicleFlowCountGroupByTimeArea">
+        <![CDATA[
+            {
+              "size": 0,
+              "query": {
+                 #set( $hasParam = false )
+                "bool": {
+                  "must": [
+                    #if($esxts && $esxts.size()> 0)
+                     #set( $hasParam = true )
+                    {
+                      "terms": {
+                        "ext": #[esxts,serialJson=true]
+                      }
+                    }
+                    #end
+                    #if($startTime && !$startTime.equals("")  && $endTime && !$endTime.equals(""))
+                    #if($hasParam),#end
+                    {
+                      "range": {
+                        "statDate": {
+                          "gte":  #[startTime],
+                          "lte":  #[endTime]
+                        }
+                      }
+                    }
+                   #end
+                  ]
+                }
+              },
+              "aggs": {
+                "groupDate": {
+                  "date_histogram": {
+                    "field": "statDate",
+                    "interval": #[interval],
+                    "format": #[format]
+                  },
+                  "aggs": {
+                       "sum_vehiclePassCount": {
+                            "sum": {
+                                "field": "vehiclePassCount"
+                            }
+                        }
+                    }
+                }
+              },
+             "sort": [ {
+                            "statDate": {
+                                "order": "asc"
+                            }
+                        }
+                ]
+            }
+        ]]>
+    </property>
+
+
+    <property name="queryVehicleTrafficflowStatisticsByCount">
+        <![CDATA[{
+    "size": 0,
+    "aggs": {
+        "sum_vehiclePassCount": {
+            "sum": {
+                "field": "vehiclePassCount"
+            }
+        },
+        "sum_djCount": {
+            "sum": {
+                "field": "djCount"
+            }
+        },
+        "sum_lfbdCount": {
+            "sum": {
+                "field": "lfbdCount"
+            }
+        },
+        "sum_lfwdCount": {
+            "sum": {
+                "field": "lfwdCount"
+            }
+        }
+    }
+}]]>
+    </property>
+</properties>
